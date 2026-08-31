@@ -111,6 +111,29 @@
   }
   wireParams('view-cramp', updateCramp);
 
+  // ---- Signos vitales: sugerencias no vinculantes para CRAMP ----
+  function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? null : v; }
+  function actualizarSugerenciasVitales() {
+    const fc = num('v_fc'), fr = num('v_fr'), tas = num('v_tas');
+    const sugerC = document.getElementById('sugerC');
+    const sugerR = document.getElementById('sugerR');
+    if (fc !== null || tas !== null) {
+      let txt = '';
+      if (tas !== null && tas < 85) { txt = 'Sugerido: 0 pts (TAS < 85)'; }
+      else if ((tas !== null && tas >= 85 && tas <= 100) || (fc !== null && (fc > 100 || fc < 60))) { txt = 'Sugerido: 1 pt (FC/TAS en rango intermedio)'; }
+      else if (tas !== null && tas > 100) { txt = 'Sugerido: 2 pts (TAS > 100)'; }
+      sugerC.textContent = txt ? txt + ' — confirmá con el examen' : '';
+    } else { sugerC.textContent = ''; }
+    if (fr !== null) {
+      let txt = (fr >= 10 && fr <= 36) ? 'Sugerido: 2 pts (FR en rango normal)' : 'Sugerido: 1 pt (FR fuera de 10-36)';
+      sugerR.textContent = txt + ' — confirmá con el examen';
+    } else { sugerR.textContent = ''; }
+  }
+  ['v_fc', 'v_fr', 'v_tas'].forEach(id => {
+    document.getElementById(id).addEventListener('input', actualizarSugerenciasVitales);
+  });
+  document.querySelector('.tab-btn[data-view="cramp"]').addEventListener('click', actualizarSugerenciasVitales);
+
   // ---- Glasgow ----
   function updateGlasgow() {
     const { values, allSelected } = getSelected('view-glasgow');
@@ -161,46 +184,60 @@
   function generarResumen() {
     const v = id => document.getElementById(id).value.trim();
     let out = '';
-    out += `EMERGENCIA RADIOLÓGICA / NUCLEAR — FICHA DE ATENCIÓN\n`;
+    out += `EMERGENCIA RADIOLÓGICA / NUCLEAR — FORMATO MIST\n`;
     out += `Guardia CNEA Ezeiza\n\n`;
     out += `PACIENTE: ${v('f_nombre')}   DNI: ${v('f_dni')}\n`;
     out += `Edad: ${v('f_edad')}  Sexo: ${v('f_sexo')}  N.º H.C.: ${v('f_hc')}\n`;
     out += `Fecha del incidente: ${v('f_fecha')}   Lugar: ${v('f_lugar')}\n`;
-    out += `Médico interviniente: ${v('f_medico')}\n\n`;
+    out += `Médico interviniente: ${v('f_medico')}\n`;
+    out += `Cronología — Incidente: ${v('f_hIncidente')}  Llamado: ${v('f_hLlamado')}  Acceso: ${v('f_hAcceso')}  Inicio atención: ${v('f_hAtencion')}\n`;
 
-    out += `CRONOLOGÍA\n`;
-    out += `  Incidente: ${v('f_hIncidente')}  Llamado: ${v('f_hLlamado')}  Acceso: ${v('f_hAcceso')}  Inicio atención: ${v('f_hAtencion')}\n\n`;
-
-    out += `DESCRIPCIÓN DEL INCIDENTE\n${v('f_quePaso') || '-'}\n`;
+    // M — Mecanismo
+    out += `\nM — MECANISMO\n${v('f_quePaso') || '-'}\n`;
     const escenario = chipValues('escenarioChips');
     if (escenario.length) out += `Escenario: ${escenario.join(', ')}\n`;
     out += `Fuente/radionucleido: ${v('f_fuente')}   Actividad: ${v('f_actividad')}\n`;
     out += `Distancia: ${v('f_distancia')}   Tiempo de exposición: ${v('f_tExposicion')}   Blindaje: ${toggleValue('blindajeToggle')}\n`;
     if (v('f_circunstancias')) out += `Circunstancias/vía de incorporación: ${v('f_circunstancias')}\n`;
 
-    out += `\nESCENA Y ABCDE\n`;
+    // I — Injuries / hallazgos
+    out += `\nI — HALLAZGOS (ABCDE, lesiones)\n`;
     out += `Escena segura: ${toggleValue('escenaToggle')}`;
     if (v('f_riesgoEscena')) out += `  — riesgo: ${v('f_riesgoEscena')}`;
     out += `\n`;
     out += `A: ${v('f_a') || '-'}\nB: ${v('f_b') || '-'}\nC: ${v('f_c') || '-'}\nD: ${v('f_d') || '-'}\nE: ${v('f_e') || '-'}\n`;
     out += `Riesgo de vida: ${toggleValue('riesgoVidaToggle')}\n`;
-
-    const crampTotalTxt = document.getElementById('cramp_total').textContent;
-    out += `\nCRAMP: ${crampTotalTxt}  (${document.getElementById('cramp_badge').textContent})\n`;
-
-    const gTotalTxt = document.getElementById('glasgow_total').textContent;
-    if (gTotalTxt !== '—') {
-      out += `\nGLASGOW: ${gTotalTxt}  (${document.getElementById('glasgow_badge').textContent})\n`;
+    if (v('f_areaLesion') || v('f_hEritema') || v('f_dosisLocal') || chipValues('gradoChips').length || v('f_quemConcurrente')) {
+      out += `Lesión cutánea por radiación — `;
+      if (v('f_areaLesion')) out += `Localización/área: ${v('f_areaLesion')}. `;
+      if (v('f_hEritema')) out += `Hora eritema inicial: ${v('f_hEritema')}. `;
+      if (v('f_dosisLocal')) out += `Dosis local estimada: ${v('f_dosisLocal')}. `;
+      const grado = chipValues('gradoChips');
+      if (grado.length) out += `Grado: ${grado.join(', ')}. `;
+      out += `\n`;
+      if (v('f_quemConcurrente')) out += `Quemadura térmica concurrente: ${v('f_quemConcurrente')}\n`;
     }
 
-    out += `\nMONITOREO RADIOLÓGICO\n`;
-    out += `OPR: ${v('f_opr')}  Hora: ${v('f_hOpr')}\n`;
+    // S — Signs (vitales + scores + radiológico)
+    out += `\nS — SIGNOS (vitales, scores, hallazgos radiológicos)\n`;
+    const fc = v('v_fc'), fr = v('v_fr'), temp = v('v_temp'), tas = v('v_tas'), tad = v('v_tad'), sat = v('v_sat');
+    if (fc || fr || temp || tas || tad || sat) {
+      out += `FC: ${fc || '-'} lpm  FR: ${fr || '-'} rpm  T°: ${temp || '-'} °C  TA: ${tas || '-'}/${tad || '-'} mmHg  SatO2: ${sat || '-'}%\n`;
+    } else { out += `Signos vitales: -\n`; }
+
+    const crampTotalTxt = document.getElementById('cramp_total').textContent;
+    out += `CRAMP: ${crampTotalTxt}  (${document.getElementById('cramp_badge').textContent})\n`;
+    const gTotalTxt = document.getElementById('glasgow_total').textContent;
+    if (gTotalTxt !== '—') {
+      out += `Glasgow: ${gTotalTxt}  (${document.getElementById('glasgow_badge').textContent})\n`;
+    }
+
+    out += `Monitoreo radiológico — OPR: ${v('f_opr')}  Hora: ${v('f_hOpr')}\n`;
     const monitoreo = chipValues('monitoreoChips');
     if (monitoreo.length) out += `Resultado: ${monitoreo.join(', ')}\n`;
     if (v('f_ubicacionAfectada')) out += `Ubicación/superficie afectada: ${v('f_ubicacionAfectada')}\n`;
     if (v('f_tipoRadiacion')) out += `Tipo de radiación: ${v('f_tipoRadiacion')}\n`;
 
-    out += `\nSÍNTOMAS Y DOSIS\n`;
     out += `Vómitos: ${toggleValue('vomitosToggle')}`;
     if (v('f_hVomito')) out += `  hora: ${v('f_hVomito')}`;
     out += `\n`;
@@ -210,18 +247,9 @@
     if (v('f_indiceT')) out += `Índice N/L+vómitos: T=${v('f_indiceT')}\n`;
     if (v('f_hemograma')) out += `Hemograma seriado: ${v('f_hemograma')}\n`;
 
-    if (v('f_areaLesion') || v('f_hEritema') || v('f_dosisLocal') || chipValues('gradoChips').length || v('f_quemConcurrente')) {
-      out += `\nLESIÓN CUTÁNEA POR RADIACIÓN\n`;
-      if (v('f_areaLesion')) out += `Localización/área: ${v('f_areaLesion')}\n`;
-      if (v('f_hEritema')) out += `Hora eritema inicial: ${v('f_hEritema')}\n`;
-      if (v('f_dosisLocal')) out += `Dosis local estimada: ${v('f_dosisLocal')}\n`;
-      const grado = chipValues('gradoChips');
-      if (grado.length) out += `Grado: ${grado.join(', ')}\n`;
-      if (v('f_quemConcurrente')) out += `Quemadura térmica concurrente: ${v('f_quemConcurrente')}\n`;
-    }
-
-    out += `\nDESCONTAMINACIÓN\n`;
-    out += `Realizada: ${toggleValue('descontamToggle')}  Ciclos: ${v('f_ciclos')}  Heridas irrigadas: ${toggleValue('irrigadasToggle')}\n`;
+    // T — Treatment
+    out += `\nT — TRATAMIENTO (incl. descontaminación, notificación, destino)\n`;
+    out += `Descontaminación — realizada: ${toggleValue('descontamToggle')}  Ciclos: ${v('f_ciclos')}  Heridas irrigadas: ${toggleValue('irrigadasToggle')}\n`;
     out += `Resultado final aceptable: ${toggleValue('resultadoToggle')}`;
     if (v('f_persisteActividad')) out += `  — persiste en: ${v('f_persisteActividad')}`;
     out += `\n`;
@@ -229,19 +257,17 @@
     if (bioensayo.length) out += `Bioensayo: ${bioensayo.join(', ')}\n`;
     if (v('f_incorporacion')) out += `Sospecha contaminación interna / vía: ${v('f_incorporacion')}\n`;
 
-    out += `\nTRATAMIENTO\n${v('f_tratamiento') || '-'}\n`;
+    out += `Tratamiento administrado: ${v('f_tratamiento') || '-'}\n`;
     out += `Yoduro de potasio: ${toggleValue('kiToggle')}`;
     if (v('f_kiIndicacion')) out += `  — indicación: ${v('f_kiIndicacion')}`;
     out += `\n`;
 
-    out += `\nNOTIFICACIÓN\n`;
-    out += `OPR: ${v('f_notifOpr')} (${v('f_notifOprH')})\n`;
-    out += `Coordinación médica: ${v('f_notifCoord')} (${v('f_notifCoordH')})\n`;
-    out += `ARN: ${v('f_notifArn')} (${v('f_notifArnH')})\n`;
-    if (v('f_notifReacts')) out += `REAC/TS: ${v('f_notifReacts')} (${v('f_notifReactsH')})\n`;
+    out += `Notificación — OPR: ${v('f_notifOpr')} (${v('f_notifOprH')}) · Coordinación médica: ${v('f_notifCoord')} (${v('f_notifCoordH')}) · ARN: ${v('f_notifArn')} (${v('f_notifArnH')})`;
+    if (v('f_notifReacts')) out += ` · REAC/TS: ${v('f_notifReacts')} (${v('f_notifReactsH')})`;
+    out += `\n`;
 
     const destinoSel = document.querySelector('#destinoOptions .opt.selected');
-    out += `\nDESTINO\n${destinoSel ? destinoSel.dataset.val : '-'}\n`;
+    out += `Destino: ${destinoSel ? destinoSel.dataset.val : '-'}\n`;
     if (v('f_centroReceptor')) out += `Centro receptor: ${v('f_centroReceptor')}\n`;
     if (v('f_observaciones')) out += `Observaciones: ${v('f_observaciones')}\n`;
 
@@ -282,6 +308,8 @@
     document.getElementById('conductaBadge').textContent = '—';
     document.getElementById('conductaBadge').className = 'badge neutral';
     document.getElementById('sintomasAlerta').style.display = 'none';
+    document.getElementById('sugerC').textContent = '';
+    document.getElementById('sugerR').textContent = '';
     updateGlasgow(); updateCramp();
     document.getElementById('resumenBox').value = '';
     tabBtns.forEach(b => b.classList.remove('active'));

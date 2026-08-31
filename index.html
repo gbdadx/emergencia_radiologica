@@ -11,608 +11,498 @@
 </head>
 
 <body>
-  <div class="app">
+<div class="app">
 
-    <header>
-      <div>
-        <h1>Emergencia Radiológica</h1>
-        <div class="sub">Guardia CNEA Ezeiza · funciona sin internet</div>
+  <header>
+    <div>
+      <h1>Emergencia Radiológica</h1>
+      <div class="sub">Guardia CNEA Ezeiza · funciona sin internet</div>
+    </div>
+    <div class="offline-pill">● offline</div>
+  </header>
+  <div class="premise"><span>☢</span><span><b>Escena segura</b> → ABCDE → irradiación/contaminación → descontaminación → CRAMP/GCS → derivación. El trauma mata rápido; la radiación no.</span></div>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-view="ficha">Ficha</button>
+    <button class="tab-btn" data-view="abcde">ABCDE</button>
+    <button class="tab-btn" data-view="cramp">CRAMP</button>
+    <button class="tab-btn" data-view="glasgow">Glasgow</button>
+    <button class="tab-btn" data-view="radio">Radiológico</button>
+    <button class="tab-btn" data-view="descontam">Descontam.</button>
+    <button class="tab-btn" data-view="cierre">Cierre</button>
+    <button class="tab-btn" data-view="referencia">Referencia</button>
+    <button class="tab-btn" data-view="resumen">Resumen</button>
+  </nav>
+
+  <!-- FICHA -->
+  <section class="view active" id="view-ficha">
+    <div class="card">
+      <h2>Datos generales</h2>
+      <div class="row2">
+        <div><label>Paciente</label><input type="text" id="f_nombre" placeholder="Apellido y nombre"></div>
+        <div><label>DNI</label><input type="text" id="f_dni" inputmode="numeric"></div>
       </div>
-      <div class="offline-pill">● offline</div>
-    </header>
-    <div class="premise"><span>☢</span><span><b>Escena segura</b> → ABCDE → irradiación/contaminación → descontaminación
-        → CRAMP/GCS → derivación. El trauma mata rápido; la radiación no.</span></div>
-
-    <nav class="tabs">
-      <button class="tab-btn active" data-view="ficha">Ficha</button>
-      <button class="tab-btn" data-view="abcde">ABCDE</button>
-      <button class="tab-btn" data-view="cramp">CRAMP</button>
-      <button class="tab-btn" data-view="glasgow">Glasgow</button>
-      <button class="tab-btn" data-view="radio">Radiológico</button>
-      <button class="tab-btn" data-view="descontam">Descontam.</button>
-      <button class="tab-btn" data-view="cierre">Cierre</button>
-      <button class="tab-btn" data-view="referencia">Referencia</button>
-      <button class="tab-btn" data-view="resumen">Resumen</button>
-    </nav>
-
-    <!-- FICHA -->
-    <section class="view active" id="view-ficha">
-      <div class="card">
-        <h2>Datos generales</h2>
-        <div class="row2">
-          <div><label>Paciente</label><input type="text" id="f_nombre" placeholder="Apellido y nombre"></div>
-          <div><label>DNI</label><input type="text" id="f_dni" inputmode="numeric"></div>
-        </div>
-        <div class="row3">
-          <div><label>Edad</label><input type="text" id="f_edad" inputmode="numeric"></div>
-          <div><label>Sexo</label><input type="text" id="f_sexo"></div>
-          <div><label>N.º H.C.</label><input type="text" id="f_hc"></div>
-        </div>
-        <div class="row2">
-          <div><label>Fecha del incidente</label><input type="text" id="f_fecha" placeholder="dd/mm/aaaa"></div>
-          <div><label>Lugar (sector/edificio)</label><input type="text" id="f_lugar"></div>
-        </div>
-        <label>Médico interviniente</label>
-        <input type="text" id="f_medico" value="Dra. Gabriela Díaz — M.N. 100412">
+      <div class="row3">
+        <div><label>Edad</label><input type="text" id="f_edad" inputmode="numeric"></div>
+        <div><label>Sexo</label><input type="text" id="f_sexo"></div>
+        <div><label>N.º H.C.</label><input type="text" id="f_hc"></div>
       </div>
-
-      <div class="card">
-        <h2>Cronología del evento</h2>
-        <p class="hint">Claves para estimar dosis (tiempo hasta el vómito, tiempo de exposición) y trazabilidad.</p>
-        <div class="row2">
-          <div><label>Hora del incidente</label><input type="text" id="f_hIncidente" placeholder="hh:mm"></div>
-          <div><label>Hora del llamado</label><input type="text" id="f_hLlamado" placeholder="hh:mm"></div>
-        </div>
-        <div class="row2">
-          <div><label>Hora de acceso al paciente</label><input type="text" id="f_hAcceso" placeholder="hh:mm"></div>
-          <div><label>Hora de inicio de atención</label><input type="text" id="f_hAtencion" placeholder="hh:mm"></div>
-        </div>
-        <button class="ghost" id="btnAhora" type="button">Completar hora actual en «inicio de atención»</button>
+      <div class="row2">
+        <div><label>Fecha del incidente</label><input type="text" id="f_fecha" placeholder="dd/mm/aaaa"></div>
+        <div><label>Lugar (sector/edificio)</label><input type="text" id="f_lugar"></div>
       </div>
+      <label>Médico interviniente</label>
+      <input type="text" id="f_medico" value="Dra. Gabriela Díaz — M.N. 100412">
+    </div>
 
-      <div class="card">
-        <h2>Descripción del incidente</h2>
-        <label>¿Qué pasó?</label>
-        <textarea id="f_quePaso" placeholder="Toque el micrófono del teclado para dictar"
-          style="min-height:70px"></textarea>
-
-        <label>Tipo de escenario</label>
-        <div class="chips" id="escenarioChips">
-          <button class="chip" data-val="Irradiación externa" type="button">Irradiación externa</button>
-          <button class="chip" data-val="Contaminación externa" type="button">Contaminación externa</button>
-          <button class="chip" data-val="Contaminación interna" type="button">Contaminación interna</button>
-          <button class="chip" data-val="Combinado con trauma/quemadura" type="button">Combinado con
-            trauma/quemadura</button>
-        </div>
-        <p class="hint" style="margin-top:8px;">Irradiación externa: expuesto a una fuente, sin contacto (no irradia a
-          terceros). Contaminación externa: material en piel/ropa. Interna: inhalación, ingesta o herida con
-          incorporación.</p>
-
-        <div class="row2">
-          <div><label>Fuente / radionucleido</label><input type="text" id="f_fuente"></div>
-          <div><label>Actividad</label><input type="text" id="f_actividad"></div>
-        </div>
-        <div class="row2">
-          <div><label>Distancia a la fuente</label><input type="text" id="f_distancia"></div>
-          <div><label>Tiempo de exposición</label><input type="text" id="f_tExposicion"></div>
-        </div>
-        <label>Blindaje presente</label>
-        <div class="toggle2" id="blindajeToggle">
-          <button data-val="Sí" type="button">Sí</button>
-          <button data-val="No" type="button">No</button>
-        </div>
-
-        <label>Circunstancias y vía probable de incorporación (si aplica)</label>
-        <textarea id="f_circunstancias"></textarea>
+    <div class="card">
+      <h2>Cronología del evento</h2>
+      <p class="hint">Claves para estimar dosis (tiempo hasta el vómito, tiempo de exposición) y trazabilidad.</p>
+      <div class="row2">
+        <div><label>Hora del incidente</label><input type="text" id="f_hIncidente" placeholder="hh:mm"></div>
+        <div><label>Hora del llamado</label><input type="text" id="f_hLlamado" placeholder="hh:mm"></div>
       </div>
-    </section>
+      <div class="row2">
+        <div><label>Hora de acceso al paciente</label><input type="text" id="f_hAcceso" placeholder="hh:mm"></div>
+        <div><label>Hora de inicio de atención</label><input type="text" id="f_hAtencion" placeholder="hh:mm"></div>
+      </div>
+      <button class="ghost" id="btnAhora" type="button">Completar hora actual en «inicio de atención»</button>
+    </div>
 
-    <!-- ABCDE -->
-    <section class="view" id="view-abcde">
-      <div class="card">
-        <h2>Escena segura</h2>
-        <div class="toggle2" id="escenaToggle">
-          <button data-val="Sí" type="button">Escena segura confirmada</button>
-          <button data-val="No" type="button">No segura</button>
-        </div>
-        <label>Riesgo (si no segura)</label>
-        <input type="text" id="f_riesgoEscena" placeholder="Radiológico, químico, incendio, eléctrico, estructural">
+    <div class="card">
+      <h2>Descripción del incidente</h2>
+      <label>¿Qué pasó?</label>
+      <textarea id="f_quePaso" placeholder="Toque el micrófono del teclado para dictar" style="min-height:70px"></textarea>
+
+      <label>Tipo de escenario</label>
+      <div class="chips" id="escenarioChips">
+        <button class="chip" data-val="Irradiación externa" type="button">Irradiación externa</button>
+        <button class="chip" data-val="Contaminación externa" type="button">Contaminación externa</button>
+        <button class="chip" data-val="Contaminación interna" type="button">Contaminación interna</button>
+        <button class="chip" data-val="Combinado con trauma/quemadura" type="button">Combinado con trauma/quemadura</button>
+      </div>
+      <p class="hint" style="margin-top:8px;">Irradiación externa: expuesto a una fuente, sin contacto (no irradia a terceros). Contaminación externa: material en piel/ropa. Interna: inhalación, ingesta o herida con incorporación.</p>
+
+      <div class="row2">
+        <div><label>Fuente / radionucleido</label><input type="text" id="f_fuente"></div>
+        <div><label>Actividad</label><input type="text" id="f_actividad"></div>
+      </div>
+      <div class="row2">
+        <div><label>Distancia a la fuente</label><input type="text" id="f_distancia"></div>
+        <div><label>Tiempo de exposición</label><input type="text" id="f_tExposicion"></div>
+      </div>
+      <label>Blindaje presente</label>
+      <div class="toggle2" id="blindajeToggle">
+        <button data-val="Sí" type="button">Sí</button>
+        <button data-val="No" type="button">No</button>
       </div>
 
-      <div class="card">
-        <h2>Evaluación inicial — ABCDE</h2>
-        <p class="hint">A: vía aérea permeable. B: frecuencia, simetría, ruidos. C: pulso, relleno capilar, TA. D:
-          pupilas y GCS. E: exponer buscando heridas, sin demorar por miedo a la contaminación.</p>
-        <label>A — Vía aérea</label><textarea id="f_a" style="min-height:44px"></textarea>
-        <label>B — Respiración</label><textarea id="f_b" style="min-height:44px"></textarea>
-        <label>C — Circulación</label><textarea id="f_c" style="min-height:44px"></textarea>
-        <label>D — Déficit neurológico</label><textarea id="f_d" style="min-height:44px"></textarea>
-        <label>E — Exposición / heridas</label><textarea id="f_e" style="min-height:44px"></textarea>
+      <label>Circunstancias y vía probable de incorporación (si aplica)</label>
+      <textarea id="f_circunstancias"></textarea>
+    </div>
+  </section>
 
-        <label>¿Riesgo de vida?</label>
-        <div class="toggle2" id="riesgoVidaToggle">
-          <button data-val="Sí — estabilizar antes de continuar" type="button">Sí — estabilizar antes de
-            continuar</button>
-          <button data-val="No" type="button">No</button>
-        </div>
+  <!-- ABCDE -->
+  <section class="view" id="view-abcde">
+    <div class="card">
+      <h2>Escena segura</h2>
+      <div class="toggle2" id="escenaToggle">
+        <button data-val="Sí" type="button">Escena segura confirmada</button>
+        <button data-val="No" type="button">No segura</button>
       </div>
-    </section>
+      <label>Riesgo (si no segura)</label>
+      <input type="text" id="f_riesgoEscena" placeholder="Radiológico, químico, incendio, eléctrico, estructural">
+    </div>
 
-    <!-- CRAMP -->
-    <section class="view" id="view-cramp">
-      <div class="card">
-        <h2>Escala CRAMP — triaje</h2>
-        <p class="hint">Circulación · Respiración · Abdomen/ingle · Motor · Palabra. Cada parámetro 0–2. Total 0–10.</p>
-
-        <div class="param" data-group="circulacion">
-          <div class="plabel">C — Circulación</div>
-          <div class="options">
-            <button class="opt" data-val="2">Pulso 60-100, relleno capilar normal, TAS &gt; 100 <span
-                class="pts">2</span></button>
-            <button class="opt" data-val="1">Pulso &gt;100 o &lt;60, relleno lento, TAS 85-100 <span
-                class="pts">1</span></button>
-            <button class="opt" data-val="0">Sin pulso, sin relleno capilar, TAS &lt; 85 <span
-                class="pts">0</span></button>
-          </div>
-        </div>
-
-        <div class="param" data-group="respiracion">
-          <div class="plabel">R — Respiración (tórax, cuello, axila)</div>
-          <div class="options">
-            <button class="opt" data-val="2">Normal, tórax no comprometido, FR 10-36 <span class="pts">2</span></button>
-            <button class="opt" data-val="1">Disnea/resp. abdominal/obstrucción, FR&gt;36 o &lt;10, tórax inestable o
-              herida penetrante <span class="pts">1</span></button>
-            <button class="opt" data-val="0">Ausente o estertorosa <span class="pts">0</span></button>
-          </div>
-        </div>
-
-        <div class="param" data-group="abdomen">
-          <div class="plabel">A — Abdomen / ingle</div>
-          <div class="options">
-            <button class="opt" data-val="2">Sin compromiso <span class="pts">2</span></button>
-            <button class="opt" data-val="1">Traumatismo cerrado, contusión o herida penetrante abdomen/ingle <span
-                class="pts">1</span></button>
-            <button class="opt" data-val="0">Rígido <span class="pts">0</span></button>
-          </div>
-        </div>
-
-        <div class="param" data-group="motor">
-          <div class="plabel">M — Motor</div>
-          <div class="options">
-            <button class="opt" data-val="2">Normal, obedece órdenes <span class="pts">2</span></button>
-            <button class="opt" data-val="1">Responde solo al dolor <span class="pts">1</span></button>
-            <button class="opt" data-val="0">Sin respuesta al dolor <span class="pts">0</span></button>
-          </div>
-        </div>
-
-        <div class="param" data-group="palabra">
-          <div class="plabel">P — Palabra</div>
-          <div class="options">
-            <button class="opt" data-val="2">Normal <span class="pts">2</span></button>
-            <button class="opt" data-val="1">Confusa o incoherente <span class="pts">1</span></button>
-            <button class="opt" data-val="0">Ausencia de palabra; herida penetrante en cráneo <span
-                class="pts">0</span></button>
-          </div>
-        </div>
-
-        <label style="margin-top:4px;">Marcar si el paciente falleció (anula el puntaje → categoría Blanco)</label>
-        <div class="toggle2" id="fallecidoToggle">
-          <button data-val="no" type="button">No</button>
-          <button data-val="si" type="button">Fallecido</button>
-        </div>
-
-        <div class="score-total">
-          <div>
-            <div style="font-size:12px;color:var(--ink-soft);">Total CRAMP</div>
-            <div class="num" id="cramp_total">—</div>
-          </div>
-          <div class="badge neutral" id="cramp_badge">Incompleto</div>
-        </div>
-        <p class="hint" style="margin-top:10px;">2-6 Rojo (1.ª prioridad) · 7-8 Amarillo (2.ª) · 0-1 Negro (3.ª) · 9-10
-          Verde (4.ª) · Fallecido: Blanco (última). Orden real de traslado: Rojo → Amarillo → Negro → Verde.</p>
+    <div class="card">
+      <h2>Signos vitales</h2>
+      <p class="hint">Se reutilizan para sugerir puntajes en CRAMP y en los scores que se agreguen más adelante.</p>
+      <div class="row3">
+        <div><label>FC (lpm)</label><input type="text" id="v_fc" inputmode="numeric"></div>
+        <div><label>FR (rpm)</label><input type="text" id="v_fr" inputmode="numeric"></div>
+        <div><label>T° (°C)</label><input type="text" id="v_temp" inputmode="decimal"></div>
       </div>
-    </section>
-
-    <!-- GLASGOW -->
-    <section class="view" id="view-glasgow">
-      <div class="card">
-        <h2>Escala de Glasgow (GCS)</h2>
-        <p class="hint">Reevaluación horaria si SIA de alta dosis o traumatismo craneoencefálico.</p>
-
-        <div class="param" data-group="ocular">
-          <div class="plabel">Apertura ocular (4)</div>
-          <div class="options">
-            <button class="opt" data-val="4">Espontánea <span class="pts">4</span></button>
-            <button class="opt" data-val="3">A la voz <span class="pts">3</span></button>
-            <button class="opt" data-val="2">Al dolor <span class="pts">2</span></button>
-            <button class="opt" data-val="1">Sin respuesta <span class="pts">1</span></button>
-          </div>
-        </div>
-
-        <div class="param" data-group="verbal">
-          <div class="plabel">Respuesta verbal (5)</div>
-          <div class="options">
-            <button class="opt" data-val="5">Orientada <span class="pts">5</span></button>
-            <button class="opt" data-val="4">Confusa <span class="pts">4</span></button>
-            <button class="opt" data-val="3">Palabras inapropiadas <span class="pts">3</span></button>
-            <button class="opt" data-val="2">Sonidos incomprensibles <span class="pts">2</span></button>
-            <button class="opt" data-val="1">Sin respuesta <span class="pts">1</span></button>
-          </div>
-        </div>
-
-        <div class="param" data-group="motora">
-          <div class="plabel">Respuesta motora (6)</div>
-          <div class="options">
-            <button class="opt" data-val="6">Obedece órdenes <span class="pts">6</span></button>
-            <button class="opt" data-val="5">Localiza el dolor <span class="pts">5</span></button>
-            <button class="opt" data-val="4">Retira al dolor <span class="pts">4</span></button>
-            <button class="opt" data-val="3">Flexión anormal <span class="pts">3</span></button>
-            <button class="opt" data-val="2">Extensión anormal <span class="pts">2</span></button>
-            <button class="opt" data-val="1">Sin respuesta <span class="pts">1</span></button>
-          </div>
-        </div>
-
-        <div class="score-total">
-          <div>
-            <div style="font-size:12px;color:var(--ink-soft);">Total GCS</div>
-            <div class="num" id="glasgow_total">—</div>
-          </div>
-          <div class="badge neutral" id="glasgow_badge">Incompleto</div>
-        </div>
-        <p class="hint" style="margin-top:10px;">≤8 se considera compromiso de conciencia severo.</p>
+      <div class="row2">
+        <div><label>TA sistólica</label><input type="text" id="v_tas" inputmode="numeric"></div>
+        <div><label>TA diastólica</label><input type="text" id="v_tad" inputmode="numeric"></div>
       </div>
-    </section>
+      <label>SatO2 (%)</label>
+      <input type="text" id="v_sat" inputmode="numeric">
+    </div>
 
-    <!-- RADIOLÓGICO -->
-    <section class="view" id="view-radio">
-      <div class="card">
-        <h2>Monitoreo radiológico</h2>
-        <div class="row2">
-          <div><label>Realizado por (OPR)</label><input type="text" id="f_opr"></div>
-          <div><label>Hora</label><input type="text" id="f_hOpr" placeholder="hh:mm"></div>
+    <div class="card">
+      <h2>Evaluación inicial — ABCDE</h2>
+      <p class="hint">A: vía aérea permeable. B: frecuencia, simetría, ruidos. C: pulso, relleno capilar, TA. D: pupilas y GCS. E: exponer buscando heridas, sin demorar por miedo a la contaminación.</p>
+      <label>A — Vía aérea</label><textarea id="f_a" style="min-height:44px"></textarea>
+      <label>B — Respiración</label><textarea id="f_b" style="min-height:44px"></textarea>
+      <label>C — Circulación</label><textarea id="f_c" style="min-height:44px"></textarea>
+      <label>D — Déficit neurológico</label><textarea id="f_d" style="min-height:44px"></textarea>
+      <label>E — Exposición / heridas</label><textarea id="f_e" style="min-height:44px"></textarea>
+
+      <label>¿Riesgo de vida?</label>
+      <div class="toggle2" id="riesgoVidaToggle">
+        <button data-val="Sí — estabilizar antes de continuar" type="button">Sí — estabilizar antes de continuar</button>
+        <button data-val="No" type="button">No</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRAMP -->
+  <section class="view" id="view-cramp">
+    <div class="card">
+      <h2>Escala CRAMP — triaje</h2>
+      <p class="hint">Circulación · Respiración · Abdomen/ingle · Motor · Palabra. Cada parámetro 0–2. Total 0–10.</p>
+
+      <div class="param" data-group="circulacion">
+        <div class="plabel">C — Circulación</div>
+        <div class="options">
+          <button class="opt" data-val="2">Pulso 60-100, relleno capilar normal, TAS &gt; 100 <span class="pts">2</span></button>
+          <button class="opt" data-val="1">Pulso &gt;100 o &lt;60, relleno lento, TAS 85-100 <span class="pts">1</span></button>
+          <button class="opt" data-val="0">Sin pulso, sin relleno capilar, TAS &lt; 85 <span class="pts">0</span></button>
         </div>
-        <label>Resultado</label>
-        <div class="chips" id="monitoreoChips">
-          <button class="chip" data-val="Contaminación externa confirmada" type="button">Contaminación externa
-            confirmada</button>
-          <button class="chip" data-val="Contaminación interna sospechada/confirmada" type="button">Contaminación
-            interna sospechada/confirmada</button>
-          <button class="chip" data-val="Sin contaminación detectada" type="button">Sin contaminación detectada</button>
-        </div>
-        <label>Ubicación / superficie afectada</label>
-        <textarea id="f_ubicacionAfectada" style="min-height:44px"></textarea>
-        <label>Instrumento / tipo de radiación identificada (α/β/γ)</label>
-        <input type="text" id="f_tipoRadiacion">
+        <p class="hint suggestion" id="sugerC"></p>
       </div>
 
-      <div class="card">
-        <h2>Síntomas y estimación de dosis</h2>
-        <label>Vómitos</label>
-        <div class="toggle2" id="vomitosToggle">
-          <button data-val="No" type="button">No</button>
-          <button data-val="Sí" type="button">Sí</button>
+      <div class="param" data-group="respiracion">
+        <div class="plabel">R — Respiración (tórax, cuello, axila)</div>
+        <div class="options">
+          <button class="opt" data-val="2">Normal, tórax no comprometido, FR 10-36 <span class="pts">2</span></button>
+          <button class="opt" data-val="1">Disnea/resp. abdominal/obstrucción, FR&gt;36 o &lt;10, tórax inestable o herida penetrante <span class="pts">1</span></button>
+          <button class="opt" data-val="0">Ausente o estertorosa <span class="pts">0</span></button>
         </div>
-        <label>Hora de inicio (si vomitó)</label>
-        <input type="text" id="f_hVomito" placeholder="hh:mm">
-
-        <label style="margin-top:12px;">Otros síntomas</label>
-        <div class="chips" id="sintomasChips">
-          <button class="chip" data-val="Fiebre" type="button">Fiebre</button>
-          <button class="chip" data-val="Diarrea" type="button">Diarrea</button>
-          <button class="chip" data-val="Alteración de conciencia" type="button">Alteración de conciencia</button>
-          <button class="chip" data-val="Convulsiones" type="button">Convulsiones</button>
-          <button class="chip" data-val="Cefalea moderada/severa" type="button">Cefalea moderada/severa</button>
-        </div>
-        <p class="hint" id="sintomasAlerta" style="display:none;margin-top:8px;color:var(--warn);"></p>
-
-        <h3>Presentación clínica → dosis estimada → conducta</h3>
-        <div class="options" id="dosisOptions">
-          <button class="opt" data-dosis="&lt; 1 Gy" data-conducta="Control en domicilio y vigilancia 5 semanas">No
-            vomita <span class="pts">&lt;1 Gy</span></button>
-          <button class="opt" data-dosis="1-2 Gy" data-conducta="Vigilancia en hospital general">Vómitos 2-3 h <span
-              class="pts">1-2 Gy</span></button>
-          <button class="opt" data-dosis="2-4 Gy" data-conducta="Hospitalización en hematología">Vómitos 1-2 h <span
-              class="pts">2-4 Gy</span></button>
-          <button class="opt" data-dosis="&gt; 4 Gy" data-conducta="Centro con hematología y cirugía">Vómitos &lt;1 h /
-            síntomas severos <span class="pts">&gt;4 Gy</span></button>
-        </div>
-        <div class="score-total" style="border-top:none;padding-top:6px;">
-          <div style="font-size:12.5px;color:var(--ink-soft);">Conducta sugerida:</div>
-          <div class="badge neutral" id="conductaBadge">—</div>
-        </div>
-
-        <label style="margin-top:14px;">Índice N/L + vómitos — T (si evaluación &gt;4 h)</label>
-        <input type="text" id="f_indiceT" inputmode="decimal" placeholder="Ej: 4.2">
-        <p class="hint">Corte T &gt; 3,7 → derivación para internación (sensibilidad 89%, especificidad 93%, REAC/TS
-          2011).</p>
-
-        <label>Hemograma seriado — horarios realizados</label>
-        <textarea id="f_hemograma" style="min-height:44px" placeholder="Ej: 08:00, 14:00, 20:00"></textarea>
+        <p class="hint suggestion" id="sugerR"></p>
       </div>
 
-      <div class="card">
-        <h2>Lesión cutánea por radiación (si aplica)</h2>
-        <p class="hint">No se clasifica como quemadura térmica clásica: curso multifásico, no predice profundidad final
-          en el momento agudo.</p>
-        <div class="row2">
-          <div><label>Localización y área (cm²)</label><input type="text" id="f_areaLesion"></div>
-          <div><label>Hora aparición eritema inicial</label><input type="text" id="f_hEritema" placeholder="hh:mm">
-          </div>
-        </div>
-        <label>Dosis local estimada</label>
-        <input type="text" id="f_dosisLocal">
-        <label>Grado</label>
-        <div class="chips" id="gradoChips" style="flex-direction:column;align-items:stretch;">
-          <button class="chip" data-val="Eritema leve" type="button">Eritema leve</button>
-          <button class="chip" data-val="Eritema franco/edema" type="button">Eritema franco/edema</button>
-          <button class="chip" data-val="Descamación seca" type="button">Descamación seca</button>
-          <button class="chip" data-val="Descamación húmeda" type="button">Descamación húmeda</button>
-          <button class="chip" data-val="Necrosis/ulceración" type="button">Necrosis/ulceración</button>
-        </div>
-        <label style="margin-top:10px;">Quemadura térmica concurrente — clasificar aparte (grado + %SCQ)</label>
-        <input type="text" id="f_quemConcurrente" placeholder="Ej: 2° superficial, 8% SCQ">
-      </div>
-    </section>
-
-    <!-- DESCONTAMINACIÓN -->
-    <section class="view" id="view-descontam">
-      <div class="card">
-        <h2>Descontaminación externa</h2>
-        <p class="hint">Orden: 1) delimitar zona sucia/limpia · 2) retirar ropa (80-90% de la contaminación) · 3) cubrir
-          heridas · 4) lavar piel sana de menos a más contaminado, sin abrasión · 5) monitorear entre ciclos (máx. 2-3).
-        </p>
-        <label>Realizada</label>
-        <div class="toggle2" id="descontamToggle"><button data-val="Sí" type="button">Sí</button><button data-val="No"
-            type="button">No</button></div>
-        <div class="row2" style="margin-top:10px;">
-          <div><label>N.º de ciclos de lavado</label><input type="text" id="f_ciclos" inputmode="numeric"></div>
-          <div><label>Heridas irrigadas</label>
-            <div class="toggle2" id="irrigadasToggle"><button data-val="Sí" type="button">Sí</button><button
-                data-val="No" type="button">No</button></div>
-          </div>
-        </div>
-        <label>Resultado final (niveles aceptables)</label>
-        <div class="toggle2" id="resultadoToggle"><button data-val="Sí" type="button">Sí</button><button data-val="No"
-            type="button">No</button></div>
-        <label>Persiste actividad en (si corresponde)</label>
-        <input type="text" id="f_persisteActividad">
-        <label>Muestras de bioensayo tomadas</label>
-        <div class="chips" id="bioensayoChips">
-          <button class="chip" data-val="Orina 24h" type="button">Orina 24h</button>
-          <button class="chip" data-val="Materia fecal" type="button">Materia fecal</button>
-          <button class="chip" data-val="Hisopado nasal/bucal" type="button">Hisopado nasal/bucal</button>
+      <div class="param" data-group="abdomen">
+        <div class="plabel">A — Abdomen / ingle</div>
+        <div class="options">
+          <button class="opt" data-val="2">Sin compromiso <span class="pts">2</span></button>
+          <button class="opt" data-val="1">Traumatismo cerrado, contusión o herida penetrante abdomen/ingle <span class="pts">1</span></button>
+          <button class="opt" data-val="0">Rígido <span class="pts">0</span></button>
         </div>
       </div>
 
-      <div class="card">
-        <h2>Sospecha de contaminación interna</h2>
-        <p class="hint">Sospechar ante: inhalación sin protección respiratoria, ingesta accidental, herida contaminada
-          con incorporación, o positivo persistente en fosas nasales/heridas tras descontaminación externa.</p>
-        <p class="hint"><b style="color:var(--ink);">No hay antídoto único.</b> Yoduro de potasio (yodo radiactivo),
-          azul de Prusia (cesio/talio), DTPA (algunos transuránicos) — siempre en conjunto con OPR/ARN, nunca de forma
-          empírica. Bioensayo (orina 24h) antes de cualquier quelante.</p>
-        <label>Vía de incorporación sospechada / observaciones</label>
-        <textarea id="f_incorporacion"></textarea>
-      </div>
-    </section>
-
-    <!-- CIERRE: tratamiento, notificación, destino -->
-    <section class="view" id="view-cierre">
-      <div class="card">
-        <h2>Tratamiento administrado</h2>
-        <textarea id="f_tratamiento" style="min-height:70px"></textarea>
-        <label>Yoduro de potasio administrado</label>
-        <div class="toggle2" id="kiToggle"><button data-val="Sí" type="button">Sí</button><button data-val="No"
-            type="button">No</button></div>
-        <label>Indicación específica (radionucleido / OPR / ARN)</label>
-        <input type="text" id="f_kiIndicacion">
-      </div>
-
-      <div class="card">
-        <h2>Notificación</h2>
-        <div class="row2">
-          <div><label>Oficial de Protección Radiológica</label><input type="text" id="f_notifOpr"></div>
-          <div><label>Hora</label><input type="text" id="f_notifOprH" placeholder="hh:mm"></div>
-        </div>
-        <div class="row2">
-          <div><label>Coordinación médica</label><input type="text" id="f_notifCoord"></div>
-          <div><label>Hora</label><input type="text" id="f_notifCoordH" placeholder="hh:mm"></div>
-        </div>
-        <div class="row2">
-          <div><label>Autoridad Regulatoria Nuclear (ARN)</label><input type="text" id="f_notifArn"></div>
-          <div><label>Hora</label><input type="text" id="f_notifArnH" placeholder="hh:mm"></div>
-        </div>
-        <div class="row2">
-          <div><label>REAC/TS (si corresponde)</label><input type="text" id="f_notifReacts"></div>
-          <div><label>Hora</label><input type="text" id="f_notifReactsH" placeholder="hh:mm"></div>
+      <div class="param" data-group="motor">
+        <div class="plabel">M — Motor</div>
+        <div class="options">
+          <button class="opt" data-val="2">Normal, obedece órdenes <span class="pts">2</span></button>
+          <button class="opt" data-val="1">Responde solo al dolor <span class="pts">1</span></button>
+          <button class="opt" data-val="0">Sin respuesta al dolor <span class="pts">0</span></button>
         </div>
       </div>
 
-      <div class="card">
-        <h2>Destino del paciente</h2>
-        <div class="options" id="destinoOptions">
-          <button class="opt" data-val="Alta con vigilancia domiciliaria (5 semanas)">Alta con vigilancia domiciliaria
-            (5 semanas)</button>
-          <button class="opt" data-val="Vigilancia en hospital general">Vigilancia en hospital general</button>
-          <button class="opt" data-val="Hospitalización en hematología">Hospitalización en hematología</button>
-          <button class="opt" data-val="Derivación a centro especializado en radiopatología">Derivación a centro
-            especializado en radiopatología</button>
-          <button class="opt" data-val="Fallecido">Fallecido</button>
-        </div>
-        <label style="margin-top:10px;">Centro receptor (si corresponde)</label>
-        <input type="text" id="f_centroReceptor">
-        <label>Observaciones</label>
-        <textarea id="f_observaciones" style="min-height:60px"></textarea>
-      </div>
-    </section>
-
-    <!-- REFERENCIA -->
-    <section class="view" id="view-referencia">
-      <div class="card">
-        <h2>Tarjeta resumen para la guardia</h2>
-        <div class="refcard">
-          <div class="rt">ESCENA</div>
-          <div class="rs">Segura antes que nada: radiológico, químico, incendio, eléctrico, estructural.</div>
-        </div>
-        <div class="refcard">
-          <div class="rt">PRIMERO</div>
-          <div class="rs">Estabilizar ABCDE. El trauma prioriza sobre la radiación.</div>
-        </div>
-        <div class="refcard">
-          <div class="rt">EPP</div>
-          <div class="rs">Bata, doble guante, dosímetro personal puesto. No se necesita traje hermético.</div>
-        </div>
-        <div class="refcard">
-          <div class="rt">REGISTRAR</div>
-          <div class="rs">Hora del incidente, tiempo de exposición estimado, hora del primer vómito.</div>
-        </div>
-        <div class="refcard">
-          <div class="rt">MONITOREAR</div>
-          <div class="rs">Detector a cargo de Protección Radiológica, antes de retirar EPP.</div>
-        </div>
-        <div class="refcard">
-          <div class="rt">DESCONTAMINAR</div>
-          <div class="rs">Ropa fuera primero; lavado suave, de menos a más contaminado.</div>
-        </div>
-        <div class="refcard" style="border-color:#E7C98A;background:var(--amber-bg);">
-          <div class="rt" style="color:var(--amber);">NO HACER</div>
-          <div class="rs" style="color:#7A5006;">No dar yoduro de potasio ni quelantes sin indicación del OPR/ARN.</div>
-        </div>
-        <div class="refcard">
-          <div class="rt">NOTIFICAR</div>
-          <div class="rs">OPR / coordinación médica de inmediato; documentar todo por escrito.</div>
+      <div class="param" data-group="palabra">
+        <div class="plabel">P — Palabra</div>
+        <div class="options">
+          <button class="opt" data-val="2">Normal <span class="pts">2</span></button>
+          <button class="opt" data-val="1">Confusa o incoherente <span class="pts">1</span></button>
+          <button class="opt" data-val="0">Ausencia de palabra; herida penetrante en cráneo <span class="pts">0</span></button>
         </div>
       </div>
 
-      <div class="card">
-        <h2>Algoritmo REAC/TS — Radiation Patient Treatment</h2>
-        <p class="hint">¿Riesgo de vida? → Estabilizar. Si no: historial del incidente y dos vías en paralelo.</p>
-        <div class="refcard">
-          <div class="rt">Vía de Contaminación</div>
-          <ol>
-            <li>Admisión en área controlada · retirar ropa</li>
-            <li>Evaluación y tratamiento médico</li>
-            <li>Determinar tipo de radiación (α/β/γ) e identificar contaminante</li>
-            <li>Monitoreo: heridas → orificios → piel sana</li>
-            <li>Hisopado nasal/bucal/heridas</li>
-            <li>Descontaminar (heridas → orificios → piel sana) y volver a monitorear</li>
-            <li>¿Niveles aceptables? Si no: llamar a REAC/TS y repetir. Si sí: monitoreo de cuerpo entero</li>
-          </ol>
-        </div>
-        <div class="refcard">
-          <div class="rt">Vía de Exposición (irradiación)</div>
-          <ol>
-            <li>¿Exposición externa? Si sí: evaluar SIA y/o lesión local</li>
-            <li>Identificar radionucleido · ¿vómitos? documentar hora</li>
-            <li>Hemograma cada 6-8 h (primeras 24-48 h)</li>
-            <li>Exposición local: examinar depilación/eritema/descamación/ampollas → dosimetría → fotos color</li>
-            <li>Cuerpo entero: dosimetría → ¿hay dosimetría física? evaluación y tratamiento; si no, considerar
-              dosimetría citogenética → derivación/internación</li>
-          </ol>
-        </div>
-        <div class="phoneline">REAC/TS 24 h: 865-576-1005 · Rutina: 865-576-3131 · orise.orau.gov/reacts</div>
+      <label style="margin-top:4px;">Marcar si el paciente falleció (anula el puntaje → categoría Blanco)</label>
+      <div class="toggle2" id="fallecidoToggle">
+        <button data-val="no" type="button">No</button>
+        <button data-val="si" type="button">Fallecido</button>
       </div>
 
-      <div class="card">
-        <h2>Radioisótopos producidos en Ezeiza</h2>
-        <p class="hint">Escenarios más probables de exposición ocupacional en el Centro Atómico Ezeiza (reactor RA-3 /
-          proyecto RA-10).</p>
-        <div class="refcard">
-          <div class="rt">Mo-99 / Tc-99m</div>
-          <div class="rs">Vida media: 66 h / 6 h. Precursor del radiofármaco más usado del mundo. Riesgo ocupacional
-            principal en planta, no en guardia. Tc-99m: gamma puro, foco en tiempo/distancia/blindaje.</div>
-        </div>
-        <div class="refcard">
-          <div class="rt">Yodo-131</div>
-          <div class="rs">Vida media ~8 días. Único escenario donde el yoduro de potasio SÍ está indicado (bloqueo
-            tiroideo precoz). Mayor relevancia de bioensayo.</div>
-        </div>
-        <div class="refcard">
-          <div class="rt">Lutecio-177</div>
-          <div class="rs">Vida media ~6,7 días. Emisor beta de baja penetración — riesgo externo bajo, incorporación sí
-            relevante (bioensayo).</div>
-        </div>
-        <div class="refcard">
-          <div class="rt">Flúor-18</div>
-          <div class="rs">Vida media ~110 min. Usado en PET. La exposición pierde relevancia en pocas horas.</div>
+      <div class="score-total">
+        <div><div style="font-size:12px;color:var(--ink-soft);">Total CRAMP</div><div class="num" id="cramp_total">—</div></div>
+        <div class="badge neutral" id="cramp_badge">Incompleto</div>
+      </div>
+      <p class="hint" style="margin-top:10px;">2-6 Rojo (1.ª prioridad) · 7-8 Amarillo (2.ª) · 0-1 Negro (3.ª) · 9-10 Verde (4.ª) · Fallecido: Blanco (última). Orden real de traslado: Rojo → Amarillo → Negro → Verde.</p>
+    </div>
+  </section>
+
+  <!-- GLASGOW -->
+  <section class="view" id="view-glasgow">
+    <div class="card">
+      <h2>Escala de Glasgow (GCS)</h2>
+      <p class="hint">Reevaluación horaria si SIA de alta dosis o traumatismo craneoencefálico.</p>
+
+      <div class="param" data-group="ocular">
+        <div class="plabel">Apertura ocular (4)</div>
+        <div class="options">
+          <button class="opt" data-val="4">Espontánea <span class="pts">4</span></button>
+          <button class="opt" data-val="3">A la voz <span class="pts">3</span></button>
+          <button class="opt" data-val="2">Al dolor <span class="pts">2</span></button>
+          <button class="opt" data-val="1">Sin respuesta <span class="pts">1</span></button>
         </div>
       </div>
 
-      <div class="card">
-        <h2>Recursos de consulta (con internet)</h2>
-        <div class="refcard">
-          <div class="rt">REMM (HHS/EE.UU.)</div>
-          <div class="rs">Algoritmos por escenario, calculadora de dosis, guías de triage. remm.hhs.gov</div>
-        </div>
-        <div class="refcard">
-          <div class="rt">OIEA</div>
-          <div class="rs">Guías de respuesta a emergencias nucleares y radiológicas (series EPR-Medical).</div>
-        </div>
-        <div class="refcard">
-          <div class="rt">OMS — Red REMPAN</div>
-          <div class="rs">Asistencia y consulta internacional en emergencias radiológicas.</div>
-        </div>
-        <div class="refcard">
-          <div class="rt">ARN (Argentina)</div>
-          <div class="rs">Plan de emergencia nuclear y radiológica nacional, referencia para coordinación local en CNEA.
-          </div>
+      <div class="param" data-group="verbal">
+        <div class="plabel">Respuesta verbal (5)</div>
+        <div class="options">
+          <button class="opt" data-val="5">Orientada <span class="pts">5</span></button>
+          <button class="opt" data-val="4">Confusa <span class="pts">4</span></button>
+          <button class="opt" data-val="3">Palabras inapropiadas <span class="pts">3</span></button>
+          <button class="opt" data-val="2">Sonidos incomprensibles <span class="pts">2</span></button>
+          <button class="opt" data-val="1">Sin respuesta <span class="pts">1</span></button>
         </div>
       </div>
 
-      <div class="card">
-        <h2>Tabla de dosis por síntomas tempranos</h2>
-        <table class="dose-table">
-          <tr>
-            <th>Presentación</th>
-            <th>Dosis est.</th>
-            <th>Conducta</th>
-          </tr>
-          <tr>
-            <td>No vomita</td>
-            <td>&lt;1 Gy</td>
-            <td>Domicilio, vigilancia 5 sem.</td>
-          </tr>
-          <tr>
-            <td>Vómitos 2-3 h</td>
-            <td>1-2 Gy</td>
-            <td>Vigilancia hospital general</td>
-          </tr>
-          <tr>
-            <td>Vómitos 1-2 h</td>
-            <td>2-4 Gy</td>
-            <td>Hospitalización hematología</td>
-          </tr>
-          <tr>
-            <td>Vómitos &lt;1 h / síntomas severos</td>
-            <td>&gt;4 Gy</td>
-            <td>Centro hematología/cirugía</td>
-          </tr>
-        </table>
+      <div class="param" data-group="motora">
+        <div class="plabel">Respuesta motora (6)</div>
+        <div class="options">
+          <button class="opt" data-val="6">Obedece órdenes <span class="pts">6</span></button>
+          <button class="opt" data-val="5">Localiza el dolor <span class="pts">5</span></button>
+          <button class="opt" data-val="4">Retira al dolor <span class="pts">4</span></button>
+          <button class="opt" data-val="3">Flexión anormal <span class="pts">3</span></button>
+          <button class="opt" data-val="2">Extensión anormal <span class="pts">2</span></button>
+          <button class="opt" data-val="1">Sin respuesta <span class="pts">1</span></button>
+        </div>
       </div>
-    </section>
 
-    <!-- RESUMEN -->
-    <section class="view" id="view-resumen">
-      <div class="card">
-        <h2>Resumen para copiar</h2>
-        <button class="primary" id="btnGenerar" type="button">Generar resumen</button>
-        <textarea id="resumenBox" readonly
-          placeholder="Tocá «Generar resumen» para volcar todos los campos completados."></textarea>
-        <button class="secondary" id="btnCopiar" type="button">Copiar al portapapeles</button>
-        <button class="ghost" id="btnCompartir" type="button">Compartir…</button>
-        <div class="copy-msg" id="copyMsg"></div>
+      <div class="score-total">
+        <div><div style="font-size:12px;color:var(--ink-soft);">Total GCS</div><div class="num" id="glasgow_total">—</div></div>
+        <div class="badge neutral" id="glasgow_badge">Incompleto</div>
       </div>
-      <div class="card">
-        <h2>Nuevo caso</h2>
-        <button class="ghost" id="btnLimpiar" type="button">Borrar todos los campos</button>
+      <p class="hint" style="margin-top:10px;">≤8 se considera compromiso de conciencia severo.</p>
+    </div>
+  </section>
+
+  <!-- RADIOLÓGICO -->
+  <section class="view" id="view-radio">
+    <div class="card">
+      <h2>Monitoreo radiológico</h2>
+      <div class="row2">
+        <div><label>Realizado por (OPR)</label><input type="text" id="f_opr"></div>
+        <div><label>Hora</label><input type="text" id="f_hOpr" placeholder="hh:mm"></div>
       </div>
-    </section>
+      <label>Resultado</label>
+      <div class="chips" id="monitoreoChips">
+        <button class="chip" data-val="Contaminación externa confirmada" type="button">Contaminación externa confirmada</button>
+        <button class="chip" data-val="Contaminación interna sospechada/confirmada" type="button">Contaminación interna sospechada/confirmada</button>
+        <button class="chip" data-val="Sin contaminación detectada" type="button">Sin contaminación detectada</button>
+      </div>
+      <label>Ubicación / superficie afectada</label>
+      <textarea id="f_ubicacionAfectada" style="min-height:44px"></textarea>
+      <label>Instrumento / tipo de radiación identificada (α/β/γ)</label>
+      <input type="text" id="f_tipoRadiacion">
+    </div>
 
-    <footer class="note">Ficha de orientación clínica — no reemplaza el registro oficial de historia clínica ni los
-      formularios de notificación de la ARN/OPR. No sustituye la intervención del OPR.</footer>
-  </div>
+    <div class="card">
+      <h2>Síntomas y estimación de dosis</h2>
+      <label>Vómitos</label>
+      <div class="toggle2" id="vomitosToggle">
+        <button data-val="No" type="button">No</button>
+        <button data-val="Sí" type="button">Sí</button>
+      </div>
+      <label>Hora de inicio (si vomitó)</label>
+      <input type="text" id="f_hVomito" placeholder="hh:mm">
 
-  <script src="script.js"></script>
+      <label style="margin-top:12px;">Otros síntomas</label>
+      <div class="chips" id="sintomasChips">
+        <button class="chip" data-val="Fiebre" type="button">Fiebre</button>
+        <button class="chip" data-val="Diarrea" type="button">Diarrea</button>
+        <button class="chip" data-val="Alteración de conciencia" type="button">Alteración de conciencia</button>
+        <button class="chip" data-val="Convulsiones" type="button">Convulsiones</button>
+        <button class="chip" data-val="Cefalea moderada/severa" type="button">Cefalea moderada/severa</button>
+      </div>
+      <p class="hint" id="sintomasAlerta" style="display:none;margin-top:8px;color:var(--warn);"></p>
+
+      <h3>Presentación clínica → dosis estimada → conducta</h3>
+      <div class="options" id="dosisOptions">
+        <button class="opt" data-dosis="&lt; 1 Gy" data-conducta="Control en domicilio y vigilancia 5 semanas">No vomita <span class="pts">&lt;1 Gy</span></button>
+        <button class="opt" data-dosis="1-2 Gy" data-conducta="Vigilancia en hospital general">Vómitos 2-3 h <span class="pts">1-2 Gy</span></button>
+        <button class="opt" data-dosis="2-4 Gy" data-conducta="Hospitalización en hematología">Vómitos 1-2 h <span class="pts">2-4 Gy</span></button>
+        <button class="opt" data-dosis="&gt; 4 Gy" data-conducta="Centro con hematología y cirugía">Vómitos &lt;1 h / síntomas severos <span class="pts">&gt;4 Gy</span></button>
+      </div>
+      <div class="score-total" style="border-top:none;padding-top:6px;">
+        <div style="font-size:12.5px;color:var(--ink-soft);">Conducta sugerida:</div>
+        <div class="badge neutral" id="conductaBadge">—</div>
+      </div>
+
+      <label style="margin-top:14px;">Índice N/L + vómitos — T (si evaluación &gt;4 h)</label>
+      <input type="text" id="f_indiceT" inputmode="decimal" placeholder="Ej: 4.2">
+      <p class="hint">Corte T &gt; 3,7 → derivación para internación (sensibilidad 89%, especificidad 93%, REAC/TS 2011).</p>
+
+      <label>Hemograma seriado — horarios realizados</label>
+      <textarea id="f_hemograma" style="min-height:44px" placeholder="Ej: 08:00, 14:00, 20:00"></textarea>
+    </div>
+
+    <div class="card">
+      <h2>Lesión cutánea por radiación (si aplica)</h2>
+      <p class="hint">No se clasifica como quemadura térmica clásica: curso multifásico, no predice profundidad final en el momento agudo.</p>
+      <div class="row2">
+        <div><label>Localización y área (cm²)</label><input type="text" id="f_areaLesion"></div>
+        <div><label>Hora aparición eritema inicial</label><input type="text" id="f_hEritema" placeholder="hh:mm"></div>
+      </div>
+      <label>Dosis local estimada</label>
+      <input type="text" id="f_dosisLocal">
+      <label>Grado</label>
+      <div class="chips" id="gradoChips" style="flex-direction:column;align-items:stretch;">
+        <button class="chip" data-val="Eritema leve" type="button">Eritema leve</button>
+        <button class="chip" data-val="Eritema franco/edema" type="button">Eritema franco/edema</button>
+        <button class="chip" data-val="Descamación seca" type="button">Descamación seca</button>
+        <button class="chip" data-val="Descamación húmeda" type="button">Descamación húmeda</button>
+        <button class="chip" data-val="Necrosis/ulceración" type="button">Necrosis/ulceración</button>
+      </div>
+      <label style="margin-top:10px;">Quemadura térmica concurrente — clasificar aparte (grado + %SCQ)</label>
+      <input type="text" id="f_quemConcurrente" placeholder="Ej: 2° superficial, 8% SCQ">
+    </div>
+  </section>
+
+  <!-- DESCONTAMINACIÓN -->
+  <section class="view" id="view-descontam">
+    <div class="card">
+      <h2>Descontaminación externa</h2>
+      <p class="hint">Orden: 1) delimitar zona sucia/limpia · 2) retirar ropa (80-90% de la contaminación) · 3) cubrir heridas · 4) lavar piel sana de menos a más contaminado, sin abrasión · 5) monitorear entre ciclos (máx. 2-3).</p>
+      <label>Realizada</label>
+      <div class="toggle2" id="descontamToggle"><button data-val="Sí" type="button">Sí</button><button data-val="No" type="button">No</button></div>
+      <div class="row2" style="margin-top:10px;">
+        <div><label>N.º de ciclos de lavado</label><input type="text" id="f_ciclos" inputmode="numeric"></div>
+        <div><label>Heridas irrigadas</label>
+          <div class="toggle2" id="irrigadasToggle"><button data-val="Sí" type="button">Sí</button><button data-val="No" type="button">No</button></div>
+        </div>
+      </div>
+      <label>Resultado final (niveles aceptables)</label>
+      <div class="toggle2" id="resultadoToggle"><button data-val="Sí" type="button">Sí</button><button data-val="No" type="button">No</button></div>
+      <label>Persiste actividad en (si corresponde)</label>
+      <input type="text" id="f_persisteActividad">
+      <label>Muestras de bioensayo tomadas</label>
+      <div class="chips" id="bioensayoChips">
+        <button class="chip" data-val="Orina 24h" type="button">Orina 24h</button>
+        <button class="chip" data-val="Materia fecal" type="button">Materia fecal</button>
+        <button class="chip" data-val="Hisopado nasal/bucal" type="button">Hisopado nasal/bucal</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Sospecha de contaminación interna</h2>
+      <p class="hint">Sospechar ante: inhalación sin protección respiratoria, ingesta accidental, herida contaminada con incorporación, o positivo persistente en fosas nasales/heridas tras descontaminación externa.</p>
+      <p class="hint"><b style="color:var(--ink);">No hay antídoto único.</b> Yoduro de potasio (yodo radiactivo), azul de Prusia (cesio/talio), DTPA (algunos transuránicos) — siempre en conjunto con OPR/ARN, nunca de forma empírica. Bioensayo (orina 24h) antes de cualquier quelante.</p>
+      <label>Vía de incorporación sospechada / observaciones</label>
+      <textarea id="f_incorporacion"></textarea>
+    </div>
+  </section>
+
+  <!-- CIERRE: tratamiento, notificación, destino -->
+  <section class="view" id="view-cierre">
+    <div class="card">
+      <h2>Tratamiento administrado</h2>
+      <textarea id="f_tratamiento" style="min-height:70px"></textarea>
+      <label>Yoduro de potasio administrado</label>
+      <div class="toggle2" id="kiToggle"><button data-val="Sí" type="button">Sí</button><button data-val="No" type="button">No</button></div>
+      <label>Indicación específica (radionucleido / OPR / ARN)</label>
+      <input type="text" id="f_kiIndicacion">
+    </div>
+
+    <div class="card">
+      <h2>Notificación</h2>
+      <div class="row2"><div><label>Oficial de Protección Radiológica</label><input type="text" id="f_notifOpr"></div><div><label>Hora</label><input type="text" id="f_notifOprH" placeholder="hh:mm"></div></div>
+      <div class="row2"><div><label>Coordinación médica</label><input type="text" id="f_notifCoord"></div><div><label>Hora</label><input type="text" id="f_notifCoordH" placeholder="hh:mm"></div></div>
+      <div class="row2"><div><label>Autoridad Regulatoria Nuclear (ARN)</label><input type="text" id="f_notifArn"></div><div><label>Hora</label><input type="text" id="f_notifArnH" placeholder="hh:mm"></div></div>
+      <div class="row2"><div><label>REAC/TS (si corresponde)</label><input type="text" id="f_notifReacts"></div><div><label>Hora</label><input type="text" id="f_notifReactsH" placeholder="hh:mm"></div></div>
+    </div>
+
+    <div class="card">
+      <h2>Destino del paciente</h2>
+      <div class="options" id="destinoOptions">
+        <button class="opt" data-val="Alta con vigilancia domiciliaria (5 semanas)">Alta con vigilancia domiciliaria (5 semanas)</button>
+        <button class="opt" data-val="Vigilancia en hospital general">Vigilancia en hospital general</button>
+        <button class="opt" data-val="Hospitalización en hematología">Hospitalización en hematología</button>
+        <button class="opt" data-val="Derivación a centro especializado en radiopatología">Derivación a centro especializado en radiopatología</button>
+        <button class="opt" data-val="Fallecido">Fallecido</button>
+      </div>
+      <label style="margin-top:10px;">Centro receptor (si corresponde)</label>
+      <input type="text" id="f_centroReceptor">
+      <label>Observaciones</label>
+      <textarea id="f_observaciones" style="min-height:60px"></textarea>
+    </div>
+  </section>
+
+  <!-- REFERENCIA -->
+  <section class="view" id="view-referencia">
+    <div class="card">
+      <h2>Tarjeta resumen para la guardia</h2>
+      <div class="refcard"><div class="rt">ESCENA</div><div class="rs">Segura antes que nada: radiológico, químico, incendio, eléctrico, estructural.</div></div>
+      <div class="refcard"><div class="rt">PRIMERO</div><div class="rs">Estabilizar ABCDE. El trauma prioriza sobre la radiación.</div></div>
+      <div class="refcard"><div class="rt">EPP</div><div class="rs">Bata, doble guante, dosímetro personal puesto. No se necesita traje hermético.</div></div>
+      <div class="refcard"><div class="rt">REGISTRAR</div><div class="rs">Hora del incidente, tiempo de exposición estimado, hora del primer vómito.</div></div>
+      <div class="refcard"><div class="rt">MONITOREAR</div><div class="rs">Detector a cargo de Protección Radiológica, antes de retirar EPP.</div></div>
+      <div class="refcard"><div class="rt">DESCONTAMINAR</div><div class="rs">Ropa fuera primero; lavado suave, de menos a más contaminado.</div></div>
+      <div class="refcard" style="border-color:#E7C98A;background:var(--amber-bg);"><div class="rt" style="color:var(--amber);">NO HACER</div><div class="rs" style="color:#7A5006;">No dar yoduro de potasio ni quelantes sin indicación del OPR/ARN.</div></div>
+      <div class="refcard"><div class="rt">NOTIFICAR</div><div class="rs">OPR / coordinación médica de inmediato; documentar todo por escrito.</div></div>
+    </div>
+
+    <div class="card">
+      <h2>Algoritmo REAC/TS — Radiation Patient Treatment</h2>
+      <p class="hint">¿Riesgo de vida? → Estabilizar. Si no: historial del incidente y dos vías en paralelo.</p>
+      <div class="refcard">
+        <div class="rt">Vía de Contaminación</div>
+        <ol>
+          <li>Admisión en área controlada · retirar ropa</li>
+          <li>Evaluación y tratamiento médico</li>
+          <li>Determinar tipo de radiación (α/β/γ) e identificar contaminante</li>
+          <li>Monitoreo: heridas → orificios → piel sana</li>
+          <li>Hisopado nasal/bucal/heridas</li>
+          <li>Descontaminar (heridas → orificios → piel sana) y volver a monitorear</li>
+          <li>¿Niveles aceptables? Si no: llamar a REAC/TS y repetir. Si sí: monitoreo de cuerpo entero</li>
+        </ol>
+      </div>
+      <div class="refcard">
+        <div class="rt">Vía de Exposición (irradiación)</div>
+        <ol>
+          <li>¿Exposición externa? Si sí: evaluar SIA y/o lesión local</li>
+          <li>Identificar radionucleido · ¿vómitos? documentar hora</li>
+          <li>Hemograma cada 6-8 h (primeras 24-48 h)</li>
+          <li>Exposición local: examinar depilación/eritema/descamación/ampollas → dosimetría → fotos color</li>
+          <li>Cuerpo entero: dosimetría → ¿hay dosimetría física? evaluación y tratamiento; si no, considerar dosimetría citogenética → derivación/internación</li>
+        </ol>
+      </div>
+      <div class="phoneline">REAC/TS 24 h: 865-576-1005 · Rutina: 865-576-3131 · orise.orau.gov/reacts</div>
+    </div>
+
+    <div class="card">
+      <h2>Radioisótopos producidos en Ezeiza</h2>
+      <p class="hint">Escenarios más probables de exposición ocupacional en el Centro Atómico Ezeiza (reactor RA-3 / proyecto RA-10).</p>
+      <div class="refcard"><div class="rt">Mo-99 / Tc-99m</div><div class="rs">Vida media: 66 h / 6 h. Precursor del radiofármaco más usado del mundo. Riesgo ocupacional principal en planta, no en guardia. Tc-99m: gamma puro, foco en tiempo/distancia/blindaje.</div></div>
+      <div class="refcard"><div class="rt">Yodo-131</div><div class="rs">Vida media ~8 días. Único escenario donde el yoduro de potasio SÍ está indicado (bloqueo tiroideo precoz). Mayor relevancia de bioensayo.</div></div>
+      <div class="refcard"><div class="rt">Lutecio-177</div><div class="rs">Vida media ~6,7 días. Emisor beta de baja penetración — riesgo externo bajo, incorporación sí relevante (bioensayo).</div></div>
+      <div class="refcard"><div class="rt">Flúor-18</div><div class="rs">Vida media ~110 min. Usado en PET. La exposición pierde relevancia en pocas horas.</div></div>
+    </div>
+
+    <div class="card">
+      <h2>Recursos de consulta (con internet)</h2>
+      <div class="refcard"><div class="rt">REMM (HHS/EE.UU.)</div><div class="rs">Algoritmos por escenario, calculadora de dosis, guías de triage. remm.hhs.gov</div></div>
+      <div class="refcard"><div class="rt">OIEA</div><div class="rs">Guías de respuesta a emergencias nucleares y radiológicas (series EPR-Medical).</div></div>
+      <div class="refcard"><div class="rt">OMS — Red REMPAN</div><div class="rs">Asistencia y consulta internacional en emergencias radiológicas.</div></div>
+      <div class="refcard"><div class="rt">ARN (Argentina)</div><div class="rs">Plan de emergencia nuclear y radiológica nacional, referencia para coordinación local en CNEA.</div></div>
+    </div>
+
+    <div class="card">
+      <h2>Tabla de dosis por síntomas tempranos</h2>
+      <table class="dose-table">
+        <tr><th>Presentación</th><th>Dosis est.</th><th>Conducta</th></tr>
+        <tr><td>No vomita</td><td>&lt;1 Gy</td><td>Domicilio, vigilancia 5 sem.</td></tr>
+        <tr><td>Vómitos 2-3 h</td><td>1-2 Gy</td><td>Vigilancia hospital general</td></tr>
+        <tr><td>Vómitos 1-2 h</td><td>2-4 Gy</td><td>Hospitalización hematología</td></tr>
+        <tr><td>Vómitos &lt;1 h / síntomas severos</td><td>&gt;4 Gy</td><td>Centro hematología/cirugía</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- RESUMEN -->
+  <section class="view" id="view-resumen">
+    <div class="card">
+      <h2>Resumen para copiar</h2>
+      <button class="primary" id="btnGenerar" type="button">Generar resumen</button>
+      <textarea id="resumenBox" readonly placeholder="Tocá «Generar resumen» para volcar todos los campos completados."></textarea>
+      <button class="secondary" id="btnCopiar" type="button">Copiar al portapapeles</button>
+      <button class="ghost" id="btnCompartir" type="button">Compartir…</button>
+      <div class="copy-msg" id="copyMsg"></div>
+    </div>
+    <div class="card">
+      <h2>Nuevo caso</h2>
+      <button class="ghost" id="btnLimpiar" type="button">Borrar todos los campos</button>
+    </div>
+  </section>
+
+  <footer class="note">Ficha de orientación clínica — no reemplaza el registro oficial de historia clínica ni los formularios de notificación de la ARN/OPR. No sustituye la intervención del OPR.</footer>
+</div>
+
+<script src="script.js"></script>
 </body>
 
 </html>
