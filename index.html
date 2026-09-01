@@ -1120,7 +1120,7 @@
         <button class="primary" id="btnGenerar" type="button">Generar resumen</button>
         <textarea id="resumenBox" readonly
           placeholder="Tocá «Generar resumen» para volcar todos los campos completados."></textarea>
-        <button class="secondary" id="btnCopiar" type="button">Copiar al portapapeles</button>
+        <button class="secondary" id="btnCopiar" type="button">Generar informe (.txt)</button>
         <button class="ghost" id="btnCompartir" type="button">Compartir…</button>
         <div class="copy-msg" id="copyMsg"></div>
       </div>
@@ -1413,17 +1413,19 @@
       }
       document.getElementById('btnGenerar').addEventListener('click', generarResumen);
 
-      document.getElementById('btnCopiar').addEventListener('click', async () => {
+      document.getElementById('btnCopiar').addEventListener('click', () => {
         const box = document.getElementById('resumenBox');
-        const msg = document.getElementById('copyMsg');
+
+        // Si la caja está vacía, genera el resumen usando tu función original
         if (!box.value) { generarResumen(); }
-        try {
-          box.select(); box.setSelectionRange(0, 999999);
-          if (navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(box.value); }
-          else { document.execCommand('copy'); }
-          msg.textContent = 'Copiado ✓';
-          setTimeout(() => { msg.textContent = ''; }, 2000);
-        } catch (e) { msg.textContent = 'No se pudo copiar automáticamente, seleccioná y copiá el texto manualmente.'; }
+
+        // Descarga directa usando una ventana alternativa (Data URI) 
+        // Esto engaña al navegador para que descargue el archivo sin perder el estado de la PWA
+        const enlace = document.createElement('a');
+        enlace.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(box.value));
+        enlace.setAttribute('download', `Resumen_Emergencia_${Date.now()}.txt`);
+
+        enlace.click();
       });
 
       document.getElementById('btnCompartir').addEventListener('click', async () => {
